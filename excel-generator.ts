@@ -1,7 +1,6 @@
 // import * as fs from 'fs';
 import * as XLSX from "xlsx";
 
-// Data to be written to the Excel file
 const data = {
   reportId: "0a24fd75-ff39-4f74-a936-dc2c28edc293",
   userId: "user_2QI3AI2rTDt3bbCRUUTVGG5shrw",
@@ -64,20 +63,16 @@ const data = {
   savedPieceCounting: [],
 };
 
-// Create a new workbook
 const workbook = XLSX.utils.book_new();
 
-// Iterate over the data and create a sheet for each table name
 for (const tableName in data) {
   if (Array.isArray(data[tableName])) {
     const sheetName = tableName;
     const sheetData = data[tableName];
 
     if (sheetData && sheetData.length > 0) {
-      // Create a new sheet
       const worksheet = XLSX.utils.json_to_sheet(sheetData);
 
-      // Add the field headers at the top of the sheet
       const headers = Object.keys(sheetData[0]);
       XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: "A1" });
 
@@ -89,16 +84,15 @@ for (const tableName in data) {
         }
       }
 
-      // Add the modified sheet data to the sheet
+      // add the new data to sheets
       XLSX.utils.sheet_add_json(worksheet, sheetData, { skipHeader: true, origin: "A2" });
 
-      // Add the sheet to the workbook
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
     }
   }
 }
 
-// Write the workbook to a file
+//write
 const excelFilePath = "output.xlsx";
 XLSX.writeFile(workbook, excelFilePath);
 

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // import * as fs from 'fs';
 var XLSX = require("xlsx");
-// Data to be written to the Excel file
 var data = {
     reportId: "0a24fd75-ff39-4f74-a936-dc2c28edc293",
     userId: "user_2QI3AI2rTDt3bbCRUUTVGG5shrw",
@@ -64,35 +63,29 @@ var data = {
     ],
     savedPieceCounting: [],
 };
-// Create a new workbook
 var workbook = XLSX.utils.book_new();
-// Iterate over the data and create a sheet for each table name
 for (var tableName in data) {
     if (Array.isArray(data[tableName])) {
         var sheetName = tableName;
         var sheetData = data[tableName];
-        // Ensure sheetData is defined and not empty
         if (sheetData && sheetData.length > 0) {
-            // Create a new sheet
             var worksheet = XLSX.utils.json_to_sheet(sheetData);
-            // Add the field headers at the top of the sheet
             var headers = Object.keys(sheetData[0]);
             XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: "A1" });
-            // Convert createdAt values to localized string format
+            // Convert createdAt values
             for (var i = 0; i < sheetData.length; i++) {
                 var createdAt = sheetData[i].createdAt;
                 if (createdAt) {
                     sheetData[i].createdAt = new Date(createdAt).toLocaleString();
                 }
             }
-            // Add the modified sheet data to the sheet
+            // add the new data to sheets
             XLSX.utils.sheet_add_json(worksheet, sheetData, { skipHeader: true, origin: "A2" });
-            // Add the sheet to the workbook
             XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
         }
     }
 }
-// Write the workbook to a file
+//write
 var excelFilePath = "output.xlsx";
 XLSX.writeFile(workbook, excelFilePath);
 console.log("Excel file created at: ".concat(excelFilePath));
